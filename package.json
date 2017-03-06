@@ -1,0 +1,30 @@
+{
+  "name": "od-train-service",
+  "version": "1.0.0",
+  "description": "Zoopla Key: p3mxbd9jexgjwgxfvysvzhpc",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha service/**/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davesartori/od-train-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davesartori/od-train-service/issues"
+  },
+  "homepage": "https://github.com/davesartori/od-train-service#readme",
+  "dependencies": {
+    "mongoose": "^4.8.6",
+    "od-train-data": "file:///Users/Dave/Documents/projects/nodetraining/odecee/od-train-data",
+    "request": "^2.73.0"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.0.0",
+    "nodemon": "^1.10.2"
+  }
+}
