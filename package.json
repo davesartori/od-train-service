@@ -4,7 +4,7 @@
   "description": "Zoopla Key: p3mxbd9jexgjwgxfvysvzhpc",
   "main": "index.js",
   "scripts": {
-    "test": "mocha service/**/*.test.js",
+    "test": "mocha service/**/*.test.js --timeout 10000",
     "test-watch": "nodemon --exec \"npm test\""
   },
   "repository": {
