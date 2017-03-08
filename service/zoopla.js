@@ -1,48 +1,44 @@
-const request = require('request');
+const {instance} = require('../config/config');
+
 const model = require('od-train-data');
 
-const ZOOPLA_URL = 'http://api.zoopla.co.uk/api/v1/property_listings.json?api_key=p3mxbd9jexgjwgxfvysvzhpc';
-const MAX_RECORDS_PER_PAGE = 10;
+// const ZOOPLA_URL = 'http://api.zoopla.co.uk/api/v1/property_listings.json?api_key=p3mxbd9jexgjwgxfvysvzhpc';
+const ZOOPLA_URL = '/api/v1/property_listings.js?api_key=key';
+const MAX_RECORDS_PER_PAGE = 100;
 
 var getAllPropertyListings = () => {
+
     return getPropertyListings(1, MAX_RECORDS_PER_PAGE).then((body) => {
         var allResults = mapZooplaResponse(body);
-        var numPages = Math.ceil(body.result_count / MAX_RECORDS_PER_PAGE);
-        var numPages = 2;
-
-        var resultPromises = [];
+        var numPages = Math.ceil(body.result_count / MAX_RECORDS_PER_PAGE);var resultPromises = [];
         for (let pageNum = 2; pageNum <= numPages; pageNum++) {
             resultPromises.push(getPropertyListings(pageNum, MAX_RECORDS_PER_PAGE));
         }
+
         return Promise.all(resultPromises)
             .then((results) => {
                 results.forEach((item) => {
                     allResults.push(...mapZooplaResponse(item));
                 });
-
                 return allResults;
             })
             .catch((err) => {
-                console.log('Error: ' + err);
+                console.error(err);
             });
     }).catch((err) => console.error(err));
 };
 
 var getPropertyListings = (pageNumber, pageSize) => {
     return new Promise((resolve, reject) => {
-        request({
-            url: `${ZOOPLA_URL}&country=England&area=Oxford&page_number=${pageNumber}&page_size=${pageSize}`,
-            json: true
-        }, (error, response, body) => {
-            if (!error && response.statusCode === 200) {
-                // console.log(JSON.stringify(body, undefined, 2));
-                resolve(body);
-            } else {
-                reject(error);
-            }
+        instance.get(`${ZOOPLA_URL}&country=England&postcode=BR2&page_number=${pageNumber}&page_size=${pageSize}`)
+            .then(response => {
+                if (response.status === 200) {
+                    resolve(response.data);
+                } else {
+                    reject(response);
+                }
+            }).catch((err) => reject(err));
         });
-    });
-
 }
 
 var mapZooplaResponse = (body) => {
@@ -72,11 +68,8 @@ var mapZooplaResponse = (body) => {
     });
 }
 
-// importZooplaPropertyListings((err, data) => {
-//     console.log(data);
-// });
-
-
 module.exports = {
-    getAllPropertyListings
+    getAllPropertyListings,
+    getPropertyListings,
+    mapZooplaResponse
 };
